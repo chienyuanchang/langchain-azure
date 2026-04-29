@@ -162,7 +162,7 @@ For a complete end-to-end example, see [`samples/enable_auto_tracing_appinsights
 
 ### Azure AI Content Understanding
 
-Load and extract content from documents, images, audio, and video using [Azure AI Content Understanding](https://learn.microsoft.com/azure/ai-services/content-understanding/). For a comprehensive walkthrough with all modalities, output modes, and RAG pipeline examples, see the [demo notebook](./docs/content_understanding_loader_demo.ipynb).
+Load and extract content from documents, images, audio, and video using [Azure AI Content Understanding](https://learn.microsoft.com/azure/ai-services/content-understanding/). For a comprehensive walkthrough with all modalities, output modes, and RAG pipeline examples, see the [demo notebook](https://github.com/langchain-ai/langchain-azure/blob/main/libs/azure-ai/docs/content_understanding_loader_demo.ipynb).
 
 #### Document Loader
 
@@ -176,24 +176,10 @@ loader = AzureAIContentUnderstandingLoader(
     url="https://example.com/report.pdf",
 )
 
+# Returns LangChain Document objects ready for use in chains and RAG pipelines
 docs = loader.load()
 print(docs[0].page_content[:200])  # markdown content
 print(docs[0].metadata["source"])  # source file info
-```
-
-Use `output_mode` to control how results are split:
-
-```python
-# One document per page — each carries metadata["page"] for source attribution
-loader = AzureAIContentUnderstandingLoader(
-    endpoint="https://{your-resource-name}.services.ai.azure.com",
-    credential=DefaultAzureCredential(),
-    file_path="report.pdf",
-    output_mode="page",
-)
-docs = loader.load()
-for doc in docs[:3]:
-    print(f"Page {doc.metadata['page']}: {doc.page_content[:80]}...")
 ```
 
 Extract structured fields with a prebuilt analyzer:
@@ -204,7 +190,6 @@ loader = AzureAIContentUnderstandingLoader(
     credential=DefaultAzureCredential(),
     file_path="invoice.pdf",
     analyzer_id="prebuilt-invoice",
-    model_deployments={"gpt-4.1": "gpt-4.1"},  # map model name -> your deployment name
 )
 
 docs = loader.load()
@@ -221,7 +206,7 @@ Load audio and video — CU supports all modalities through a single loader:
 loader = AzureAIContentUnderstandingLoader(
     endpoint="https://{your-resource-name}.services.ai.azure.com",
     credential=DefaultAzureCredential(),
-    url="https://example.com/support-call.mp3",
+    url="https://raw.githubusercontent.com/Azure-Samples/azure-ai-content-understanding-assets/main/audio/callCenterRecording.mp3",
 )
 docs = loader.load()
 print(docs[0].page_content[:200])           # transcript as markdown
