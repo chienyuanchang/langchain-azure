@@ -37,6 +37,7 @@ This package includes:
 * [Microsoft Foundry Content Safety](https://github.com/langchain-ai/langchain-azure/libs/azure-ai/langchain_azure_ai/agents/middleware)
 * [Microsoft Foundry Agent Service](https://github.com/langchain-ai/langchain-azure/libs/azure-ai/langchain_azure_ai/agents)
 * [Azure AI Search](https://github.com/langchain-ai/langchain-azure/libs/azure-ai/langchain_azure_ai/vectorstores)
+* [Azure AI Content Understanding](https://github.com/langchain-ai/langchain-azure/libs/azure-ai/langchain_azure_ai/document_loaders)
 * [Azure AI Services tools](https://github.com/langchain-ai/langchain-azure/libs/azure-ai/langchain_azure_ai/tools)
 * [Cosmos DB](https://github.com/langchain-ai/langchain-azure/libs/azure-ai/langchain_azure_ai/vectorstores)
 
@@ -159,6 +160,97 @@ enable_auto_tracing(
 
 For a complete end-to-end example, see [`samples/enable_auto_tracing_appinsights.py`](../../samples/enable_auto_tracing_appinsights.py).
 
+### Azure AI Content Understanding
+
+Load and extract content from documents, images, audio, and video using [Azure AI Content Understanding](https://learn.microsoft.com/azure/ai-services/content-understanding/). For a comprehensive walkthrough with all modalities, output modes, and RAG pipeline examples, see the [demo notebook](./docs/content_understanding_loader_demo.ipynb).
+
+#### Document Loader
+
+```python
+from azure.identity import DefaultAzureCredential
+from langchain_azure_ai.document_loaders import AzureAIContentUnderstandingLoader
+
+loader = AzureAIContentUnderstandingLoader(
+    endpoint="https://{your-resource-name}.services.ai.azure.com",
+    credential=DefaultAzureCredential(),
+    url="https://example.com/report.pdf",
+)
+
+docs = loader.load()
+print(docs[0].page_content[:200])  # markdown content
+print(docs[0].metadata["source"])  # source file info
+```
+
+Use `output_mode` to control how results are split:
+
+```python
+# One document per page — each carries metadata["page"] for source attribution
+loader = AzureAIContentUnderstandingLoader(
+    endpoint="https://{your-resource-name}.services.ai.azure.com",
+    credential=DefaultAzureCredential(),
+    file_path="report.pdf",
+    output_mode="page",
+)
+docs = loader.load()
+for doc in docs[:3]:
+    print(f"Page {doc.metadata['page']}: {doc.page_content[:80]}...")
+```
+
+Extract structured fields with a prebuilt analyzer:
+
+```python
+loader = AzureAIContentUnderstandingLoader(
+    endpoint="https://{your-resource-name}.services.ai.azure.com",
+    credential=DefaultAzureCredential(),
+    file_path="invoice.pdf",
+    analyzer_id="prebuilt-invoice",
+    model_deployments={"gpt-4.1": "gpt-4.1"},  # map model name -> your deployment name
+)
+
+docs = loader.load()
+fields = docs[0].metadata["fields"]
+print(f"Amount due: {fields['AmountDue']['value']}")      # field value
+print(f"Confidence: {fields['AmountDue']['confidence']}")  # confidence score
+print(f"Vendor: {fields['VendorName']['value']}")
+```
+
+Load audio and video — CU supports all modalities through a single loader:
+
+```python
+# Transcribe an audio file
+loader = AzureAIContentUnderstandingLoader(
+    endpoint="https://{your-resource-name}.services.ai.azure.com",
+    credential=DefaultAzureCredential(),
+    url="https://example.com/support-call.mp3",
+)
+docs = loader.load()
+print(docs[0].page_content[:200])           # transcript as markdown
+print(docs[0].metadata["start_time_ms"])    # 0
+print(docs[0].metadata["end_time_ms"])      # total duration in ms
+```
+
+#### Agent Tool
+
+Use `AzureAIContentUnderstandingTool` to give LLM agents the ability to analyze documents, images, audio, and video:
+
+```python
+from azure.identity import DefaultAzureCredential
+from langchain_azure_ai.tools import AzureAIContentUnderstandingTool
+
+tool = AzureAIContentUnderstandingTool(
+    endpoint="https://{your-resource-name}.services.ai.azure.com",
+    credential=DefaultAzureCredential(),
+)
+
+# Analyze a document from a URL
+result = tool.invoke({"source": "https://example.com/invoice.pdf", "source_type": "url"})
+print(result)
+
+# Analyze a local file
+result = tool.invoke({"source": "/path/to/report.pdf", "source_type": "path"})
+print(result)
+```
+
 
 ## Changelog
 
@@ -171,6 +263,8 @@ For a complete end-to-end example, see [`samples/enable_auto_tracing_appinsights
 
 - **1.2.2**:
 
+  - **[NEW]** We introduced `AzureAIContentUnderstandingLoader` document loader for extracting content from documents, images, audio, and video using Azure AI Content Understanding. [#423](https://github.com/langchain-ai/langchain-azure/pull/423)
+  - **[NEW]** We introduced `AzureAIContentUnderstandingTool` for using Content Understanding as an agent tool, also available via `AIServicesToolkit`. [#446](https://github.com/langchain-ai/langchain-azure/pull/446)
   - We introduced `context_extractor` support across content safety middleware classes, so you can control how content is extracted from agent state before safety checks run. [#419](https://github.com/langchain-ai/langchain-azure/pull/419)
   - We introduced `context_extractor` support for `AzureGroundednessMiddleware` and added a notebook example for easier adoption. [#410](https://github.com/langchain-ai/langchain-azure/pull/410)
   - We changed the default implementation of `init_chat_model("azure_ai:<your-model>")` to use the OpenAI Responses API path for improved compatibility with modern LangChain chat model initialization. [#409](https://github.com/langchain-ai/langchain-azure/pull/409)
