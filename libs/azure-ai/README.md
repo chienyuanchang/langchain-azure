@@ -162,15 +162,7 @@ For a complete end-to-end example, see [`samples/enable_auto_tracing_appinsights
 
 ### Azure AI Content Understanding
 
-Load and extract content from documents, images, audio, and video using [Azure AI Content Understanding](https://learn.microsoft.com/azure/ai-services/content-understanding/). For a comprehensive walkthrough with all modalities, output modes, and RAG pipeline examples, see the [demo notebook](https://github.com/langchain-ai/langchain-azure/blob/main/libs/azure-ai/docs/content_understanding_loader_demo.ipynb).
-
-**Why use Content Understanding over traditional PDF loaders?**
-
-- **Accurate table extraction** — CU produces correct markdown tables even when cells are empty. Most PDF text extractors lose column alignment and output a flat list of values, making it impossible to reconstruct which value belongs to which column. See this [sample PDF](https://github.com/Azure-Samples/azure-ai-content-understanding-assets/blob/153612d0dc17afe58166515c79b5a724da56f3bf/document/financial_table_and_chart.pdf) for an example that breaks standard loaders.
-- **Chart and figure understanding** — The `prebuilt-documentSearch` analyzer extracts semantic content from charts and figures (e.g., bar chart values, trend descriptions), not just scattered axis labels.
-- **Multi-modal in one loader** — Documents, images, audio, and video all go through the same `AzureAIContentUnderstandingLoader` interface, returning clean markdown content ready for RAG pipelines.
-
-#### Document Loader
+Load and extract content from documents, images, audio, and video using [Azure AI Content Understanding](https://learn.microsoft.com/azure/ai-services/content-understanding/). CU delivers high-quality markdown with accurate table structure (including empty cells), chart/figure understanding, and multi-modal support through a single loader interface.
 
 ```python
 from azure.identity import DefaultAzureCredential
@@ -181,66 +173,10 @@ loader = AzureAIContentUnderstandingLoader(
     credential=DefaultAzureCredential(),
     url="https://raw.githubusercontent.com/Azure-Samples/azure-ai-content-understanding-assets/main/document/financial_table_and_chart.pdf",
 )
-
-# Returns LangChain Document objects ready for use in chains and RAG pipelines
 docs = loader.load()
-print(docs[0].page_content[:200])  # markdown content
-print(docs[0].metadata["source"])  # source file info
 ```
 
-Extract structured fields with a prebuilt analyzer:
-
-```python
-loader = AzureAIContentUnderstandingLoader(
-    endpoint="https://{your-resource-name}.services.ai.azure.com",
-    credential=DefaultAzureCredential(),
-    file_path="invoice.pdf",
-    analyzer_id="prebuilt-invoice",
-)
-
-docs = loader.load()
-fields = docs[0].metadata["fields"]
-print(f"Amount due: {fields['AmountDue']['value']}")      # field value
-print(f"Confidence: {fields['AmountDue']['confidence']}")  # confidence score
-print(f"Vendor: {fields['VendorName']['value']}")
-```
-
-Load audio and video — CU supports all modalities through a single loader:
-
-```python
-# Transcribe an audio file
-loader = AzureAIContentUnderstandingLoader(
-    endpoint="https://{your-resource-name}.services.ai.azure.com",
-    credential=DefaultAzureCredential(),
-    url="https://raw.githubusercontent.com/Azure-Samples/azure-ai-content-understanding-assets/main/audio/callCenterRecording.mp3",
-)
-docs = loader.load()
-print(docs[0].page_content[:200])           # transcript as markdown
-print(docs[0].metadata["start_time_ms"])    # 0
-print(docs[0].metadata["end_time_ms"])      # total duration in ms
-```
-
-#### Agent Tool
-
-Use `AzureAIContentUnderstandingTool` to give LLM agents the ability to analyze documents, images, audio, and video:
-
-```python
-from azure.identity import DefaultAzureCredential
-from langchain_azure_ai.tools import AzureAIContentUnderstandingTool
-
-tool = AzureAIContentUnderstandingTool(
-    endpoint="https://{your-resource-name}.services.ai.azure.com",
-    credential=DefaultAzureCredential(),
-)
-
-# Analyze a document from a URL
-result = tool.invoke({"source": "https://example.com/invoice.pdf", "source_type": "url"})
-print(result)
-
-# Analyze a local file
-result = tool.invoke({"source": "/path/to/report.pdf", "source_type": "path"})
-print(result)
-```
+Also available as an agent tool via `AzureAIContentUnderstandingTool`. For a comprehensive walkthrough, see the [demo notebook](https://github.com/langchain-ai/langchain-azure/blob/main/libs/azure-ai/docs/content_understanding_loader_demo.ipynb).
 
 
 ## Changelog
