@@ -166,7 +166,7 @@ Load and extract content from documents, images, audio, and video using [Azure A
 
 **Why use Content Understanding over traditional PDF loaders?**
 
-- **Accurate table extraction** — CU produces correct markdown tables even when cells are empty. Most PDF text extractors (e.g., PyPDFLoader, PyMuPDFLoader) lose column alignment and output a flat list of values, making it impossible to reconstruct which value belongs to which column. See this [sample PDF](https://github.com/Azure-Samples/azure-ai-content-understanding-assets/blob/153612d0dc17afe58166515c79b5a724da56f3bf/document/financial_table_and_chart.pdf) for an example that breaks standard loaders.
+- **Accurate table extraction** — CU produces correct markdown tables even when cells are empty. Most PDF text extractors lose column alignment and output a flat list of values, making it impossible to reconstruct which value belongs to which column. See this [sample PDF](https://github.com/Azure-Samples/azure-ai-content-understanding-assets/blob/153612d0dc17afe58166515c79b5a724da56f3bf/document/financial_table_and_chart.pdf) for an example that breaks standard loaders.
 - **Chart and figure understanding** — The `prebuilt-documentSearch` analyzer extracts semantic content from charts and figures (e.g., bar chart values, trend descriptions), not just scattered axis labels.
 - **Multi-modal in one loader** — Documents, images, audio, and video all go through the same `AzureAIContentUnderstandingLoader` interface, returning clean markdown content ready for RAG pipelines.
 
