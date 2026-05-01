@@ -162,7 +162,7 @@ For a complete end-to-end example, see [`samples/enable_auto_tracing_appinsights
 
 ### Azure AI Content Understanding
 
-Load and extract content from documents, images, audio, and video using [Azure AI Content Understanding](https://learn.microsoft.com/azure/ai-services/content-understanding/). CU delivers high-quality markdown with accurate table structure (including empty cells), chart/figure understanding, and multi-modal support through a single loader interface. Also available as an agent tool via `AzureAIContentUnderstandingTool`.
+Use `AzureAIContentUnderstandingLoader` to extract content from documents, images, audio, and video via [Azure AI Content Understanding](https://learn.microsoft.com/azure/ai-services/content-understanding/). Returns high-quality markdown with accurate table structure, chart/figure understanding, and multi-modal support. Also available as an agent tool via `AzureAIContentUnderstandingTool`.
 
 For a comprehensive walkthrough, see the [demo notebook](https://github.com/langchain-ai/langchain-azure/blob/main/libs/azure-ai/docs/content_understanding_loader_demo.ipynb).
 
