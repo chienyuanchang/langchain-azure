@@ -163,7 +163,7 @@ For a complete end-to-end example, see [`samples/enable_auto_tracing_appinsights
 
 Use tools from Azure AI services as LangChain tools via `AzureAIServicesToolkit`. Available tools include Azure AI Content Understanding, Document Intelligence, Image Analysis, Text Analytics for Health, and more.
 
-Azure AI Content Understanding is also available as a document loader via `AzureAIContentUnderstandingLoader`.
+Azure AI Content Understanding is also available as a document loader via `AzureAIContentUnderstandingLoader`. See the [Content Understanding loader notebook](./docs/content_understanding_loader_demo.ipynb) for a full walkthrough.
 
 
 ## Changelog
