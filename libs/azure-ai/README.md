@@ -164,6 +164,12 @@ For a complete end-to-end example, see [`samples/enable_auto_tracing_appinsights
 
 Load and extract content from documents, images, audio, and video using [Azure AI Content Understanding](https://learn.microsoft.com/azure/ai-services/content-understanding/). For a comprehensive walkthrough with all modalities, output modes, and RAG pipeline examples, see the [demo notebook](https://github.com/langchain-ai/langchain-azure/blob/main/libs/azure-ai/docs/content_understanding_loader_demo.ipynb).
 
+**Why use Content Understanding over traditional PDF loaders?**
+
+- **Accurate table extraction** — CU produces correct markdown tables even when cells are empty. Most PDF text extractors (e.g., PyPDFLoader, PyMuPDFLoader) lose column alignment and output a flat list of values, making it impossible to reconstruct which value belongs to which column. See this [sample PDF](https://github.com/Azure-Samples/azure-ai-content-understanding-assets/blob/153612d0dc17afe58166515c79b5a724da56f3bf/document/financial_table_and_chart.pdf) for an example that breaks standard loaders.
+- **Chart and figure understanding** — The `prebuilt-documentSearch` analyzer extracts semantic content from charts and figures (e.g., bar chart values, trend descriptions), not just scattered axis labels.
+- **Multi-modal in one loader** — Documents, images, audio, and video all go through the same `AzureAIContentUnderstandingLoader` interface, returning clean markdown content ready for RAG pipelines.
+
 #### Document Loader
 
 ```python
@@ -173,7 +179,7 @@ from langchain_azure_ai.document_loaders import AzureAIContentUnderstandingLoade
 loader = AzureAIContentUnderstandingLoader(
     endpoint="https://{your-resource-name}.services.ai.azure.com",
     credential=DefaultAzureCredential(),
-    url="https://example.com/report.pdf",
+    url="https://raw.githubusercontent.com/Azure-Samples/azure-ai-content-understanding-assets/main/document/financial_table_and_chart.pdf",
 )
 
 # Returns LangChain Document objects ready for use in chains and RAG pipelines
