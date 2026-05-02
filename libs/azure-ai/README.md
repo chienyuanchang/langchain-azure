@@ -37,8 +37,7 @@ This package includes:
 * [Microsoft Foundry Content Safety](https://github.com/langchain-ai/langchain-azure/libs/azure-ai/langchain_azure_ai/agents/middleware)
 * [Microsoft Foundry Agent Service](https://github.com/langchain-ai/langchain-azure/libs/azure-ai/langchain_azure_ai/agents)
 * [Azure AI Search](https://github.com/langchain-ai/langchain-azure/libs/azure-ai/langchain_azure_ai/vectorstores)
-* [Azure AI Services tools](https://github.com/langchain-ai/langchain-azure/libs/azure-ai/langchain_azure_ai/tools)
-* [Cosmos DB](https://github.com/langchain-ai/langchain-azure/libs/azure-ai/langchain_azure_ai/vectorstores)
+* [Microsoft Foundry Tools](https://github.com/langchain-ai/langchain-azure/tree/main/libs/azure-ai/langchain_azure_ai/tools) (including Azure AI Content Understanding, Document Intelligence, and more)
 
 Here's a quick start example to show you how to get started with the Chat Completions model. For more details and tutorials see [Get started with LangChain and LangGraph with Foundry](https://aka.ms/azureai/langchain).
 
@@ -159,6 +158,12 @@ enable_auto_tracing(
 
 For a complete end-to-end example, see [`samples/enable_auto_tracing_appinsights.py`](../../samples/enable_auto_tracing_appinsights.py).
 
+### Microsoft Foundry Tools
+
+Use tools from Azure AI services as LangChain tools via `AzureAIServicesToolkit`. Available tools include Azure AI Content Understanding, Document Intelligence, Image Analysis, Text Analytics for Health, and more.
+
+Azure AI Content Understanding is also available as a document loader via `AzureAIContentUnderstandingLoader`. See the [Content Understanding loader notebook](./docs/content_understanding_loader_demo.ipynb) for a full walkthrough.
+
 
 ## Changelog
 
@@ -171,6 +176,8 @@ For a complete end-to-end example, see [`samples/enable_auto_tracing_appinsights
 
 - **1.2.2**:
 
+  - **[NEW]** We introduced `AzureAIContentUnderstandingLoader` document loader for extracting content from documents, images, audio, and video using Azure AI Content Understanding. [#423](https://github.com/langchain-ai/langchain-azure/pull/423)
+  - **[NEW]** We introduced `AzureAIContentUnderstandingTool` for using Content Understanding as an agent tool, also available via `AzureAIServicesToolkit`. [#446](https://github.com/langchain-ai/langchain-azure/pull/446)
   - We introduced `context_extractor` support across content safety middleware classes, so you can control how content is extracted from agent state before safety checks run. [#419](https://github.com/langchain-ai/langchain-azure/pull/419)
   - We introduced `context_extractor` support for `AzureGroundednessMiddleware` and added a notebook example for easier adoption. [#410](https://github.com/langchain-ai/langchain-azure/pull/410)
   - We changed the default implementation of `init_chat_model("azure_ai:<your-model>")` to use the OpenAI Responses API path for improved compatibility with modern LangChain chat model initialization. [#409](https://github.com/langchain-ai/langchain-azure/pull/409)
