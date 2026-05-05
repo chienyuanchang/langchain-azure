@@ -311,14 +311,14 @@ isodate = ">=0.6.1,<1.0.0"
 
 [[package]]
 name = "azure-ai-contentunderstanding"
-version = "1.1.0"
+version = "1.2.0b1"
 description = "Microsoft Corporation Azure AI Content Understanding Client Library for Python"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "azure_ai_contentunderstanding-1.1.0-py3-none-any.whl", hash = "sha256:d1d6bdeffe02f5c8cc5309f0e120a1338f51af04638605f9617b7b501e2d1dd6"},
-    {file = "azure_ai_contentunderstanding-1.1.0.tar.gz", hash = "sha256:00f39c7cf2ba50c8d4586315f4295a45fad0881daaff07d13d33aea2bafc7ec8"},
+    {file = "azure_ai_contentunderstanding-1.2.0b1-py3-none-any.whl", hash = "sha256:ad493bd8021887f937734d769cbedc04c04f495b101479b0ac3d74ede6203e4f"},
+    {file = "azure_ai_contentunderstanding-1.2.0b1.tar.gz", hash = "sha256:0379f3e5d7ae75fd7b5a4275d036935a9341965d946f46c902fe3ba641be41a0"},
 ]
 
 [package.dependencies]
@@ -3211,7 +3211,7 @@ files = [
     {file = "pycparser-3.0-py3-none-any.whl", hash = "sha256:b727414169a36b7d524c1c3e31839a521725078d7b2ff038656844266160a992"},
     {file = "pycparser-3.0.tar.gz", hash = "sha256:600f49d217304a5902ac3c37e1281c9fe94e4d0489de643a9504c5cdfdfc6b29"},
 ]
-markers = {main = "platform_python_implementation != \"PyPy\" and implementation_name != \"PyPy\"", dev = "implementation_name == \"pypy\"", test = "platform_python_implementation != \"PyPy\" and implementation_name != \"PyPy\""}
+markers = {main = "implementation_name != \"PyPy\" and platform_python_implementation != \"PyPy\"", dev = "implementation_name == \"pypy\"", test = "implementation_name != \"PyPy\" and platform_python_implementation != \"PyPy\""}
 
 [[package]]
 name = "pydantic"
@@ -5114,4 +5114,4 @@ v1 = ["azure-ai-agents", "azure-ai-inference"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10.0,<4.0"
-content-hash = "41dd84efba0bab23ad8de1ce5bc778db752e72cbc6c173ff9ba38e76b6b86ce7"
+content-hash = "99bfcb48f0e4143a8eb6999839ee444c52680feb3e84f0edb45178dcc618c8d0"
